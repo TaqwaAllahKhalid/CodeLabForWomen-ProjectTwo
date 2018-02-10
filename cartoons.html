@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/earlyaccess/amiri.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <title>Spacetoon</title>
+
+</head>
+<body>
+<div id="root">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <img class="logo-size" src="http://spacetoon.com/assets/imgs/logo.png" alt="">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">الصفحة الرئيسية <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  active" href="cartoons.html">الكرتون</a>
+                </li>
+            </ul>
+
+            <div class="form-inline my-2 my-lg-0">
+                <input v-model="cartoon" class="form-control mr-sm-2" type="search" placeholder="اسم الكرتون"
+                       aria-label="Search">
+                <button @click="getIndex" class="btn btn-outline-success my-2 my-sm-0">ابحث</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div v-if="flag==false" class="row">
+            <div class="col-12 col-md-8 mt-3">
+                <div class="row">
+                    <div class="col-12 col-md-3">
+                        <img class="h-90 w-100"
+                             src="https://vignette.wikia.nocookie.net/disneyjuniorpedia/images/2/2a/Babar_2.png/revision/latest?cb=20170322173800"
+                             alt="">
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="row">
+                            <img src="http://4.bp.blogspot.com/-CjE6JuGatWU/U2ijSwMba0I/AAAAAAAAdJs/KMb1t2dLsaM/s1600/duola-a-meng_28.png"
+                                 alt="">
+                        </div>
+                        <div class="row">
+                            <img style="height:410px;width:400px"
+                                 src="http://grafus.com.br/terranerdica/wp-content/uploads/2017/08/goku_gohan_goten_trunks.png"
+                                 alt="">
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <img style="height:410px;width:340px"
+                             src="https://vignette.wikia.nocookie.net/pandaland/images/d/d5/Edogawa_Conan.png/revision/latest?cb=20160610082554"
+                             alt="">
+                    </div>
+                </div>
+            </div>
+            <div style="font-family: 'Amiri', serif;" class="col-12 col-md-4 mt-5 align-items-center">
+                <h4 class="sideCol fontStyle">
+                    من يعرف كيف يكون محبوبا بين الناس؟
+                    يسعى ويحاول نشر السعاده .. من يسعى للوصول لقلوب
+                    جميع الناس هو من يعطي الطفل الافاده. تخيلوا ان الكون
+                    لا طعم له او لون او ان التلفزيون من غير سبيس تون :(
+                    هذا محال صديقي تعاال .. لنشاهد افلاما وبرامج للاطفال , تعال
+                    صديقي تعال .. لحظات لا تنسى مع كل الأطفال ..
+                    لا تنس ان تبقى مع سبيس تون
+                </h4>
+            </div>
+        </div>
+        <div v-else="flag==true" class="row justify-content-center">
+
+            <div class="col-12 col-md-5 mt-3">
+                <div class="row justify-content-center">
+
+                    <div class=" card bg-light" style="width: 18rem;font-family: 'Amiri', serif;">
+                        <img class="card-img-top" v-bind:src="image" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">اسم الكرتون : {{choosedCartoon.name}}</h5>
+                            <h5>الكوكب : {{choosedCartoon.planet}}</h5>
+                            <p class="card-text">وصف الكرتون :
+                                {{choosedCartoon.description}}</p>
+                            <h5>اغنية الكرتون :</h5>
+                            <a v-bind:href="song" class="fa fa-youtube"></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#root',
+            data: {
+                cartoon: '',
+                cartoons: [],
+                choosedCartoon: {},
+                image: '',
+                song: '',
+                flag: false,
+            },
+            methods: {
+                getIndex: function () {
+                    for (i = 0; i < this.cartoons.length; i++)
+                        if (this.cartoon == this.cartoons[i].name) {
+                            this.choosedCartoon = this.cartoons[i]
+                            this.flag = true
+                            this.image = this.choosedCartoon.image
+                            this.song = this.choosedCartoon.song
+                            return;
+
+                        }
+                },
+            }
+        })
+
+        axios.get('http://codelab.camp/api/spacetoon').then(function (response) {
+            app.cartoons = response.data
+        })
+
+
+    </script>
+
+</body>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</html>
